@@ -2,14 +2,15 @@ import re
 from urllib import request
 from urllib.request import Request, ProxyHandler
 from urllib.error import HTTPError
-from Class import ProxyServer
+
+from app.Models import ProxyServer
 
 
-def proxy_test(proxy_configured):
+def proxy_test():
     print('Proxy Testing...')
     test_headers = {
-        'User-Agent:': 'Mozilla/5.0 (X11; Linux i686) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/35.0.1916.153 Safari/537.36'}
-    test_url = 'http://www.google.com'
+        'User-Agent': 'Mozilla/5.0 (X11; Linux i686) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/35.0.1916.153 Safari/537.36'}
+    test_url = 'http://www.baidu.com'
     test_request = Request(test_url, headers=test_headers)
     try:
         test_response = request.urlopen(test_request, timeout=10)
@@ -18,8 +19,9 @@ def proxy_test(proxy_configured):
             return True
         else:
             return False
-    except Exception:
+    except Exception as e:
         print(u'Failed to configure proxy!')
+        return False
 
 
 def find_highest_speed(proxy_list):
@@ -53,7 +55,7 @@ def get_proxy_list():
         print(e.code)
     name_ul = re.compile("(?isu)<ul>(.*?)</ul>")
     name_li = re.compile("(?isu)<li[^>]*>(.*?)</li>")
-    proxy_list_txt = open('proxy_list.txt', 'w')
+    proxy_list_txt = open('../../Config/proxy_list.txt', 'w')
     proxy_list = []
     for row in name_ul.findall(html):
         proxy_address = ''.join(name_li.findall(row)[0:1])
@@ -69,9 +71,7 @@ def get_proxy_list():
         proxy_server = ProxyServer(proxy_address, proxy_http, speed, proxy_type, country_name)
         proxy_list.append(proxy_server)
         proxy_list_txt.write(proxy_server.proxy_address + '\n')
-
     proxy_list_txt.close()
-
     return proxy_list
 
 
@@ -80,10 +80,24 @@ def proxy_setting(proxy_list):
         random_proxy, new_proxy_list = find_highest_speed(proxy_list)
     except Exception as e:
         print('Failed to Configure Proxy!')
-    proxy_handler = ProxyHandler({'http': 'http://%s' % random_proxy.proxy_address})
+    proxy_handler = ProxyHandler({'http': random_proxy.proxy_address,
+                                  'https': random_proxy.proxy_address})
     opener = request.build_opener(proxy_handler)
     request.install_opener(opener)
     print('Proxy Configuring...')
-    return random_proxy, new_proxy_list
-
-if __name__ == '__main__':
+    print('Proxy Testing...')
+    test_headers = {
+        'User-Agent': 'Mozilla/5.0 (X11; Linux i686) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/35.0.1916.153 Safari/537.36'}
+    test_url = 'http://www.baidu.com'
+    test_request = Request(test_url, headers=test_headers)
+    try:
+        test_response = request.urlopen(test_request, timeout=1000)
+        if test_response.getcode() == 200:
+            print(u'Configured proxy successfully!')
+            return True
+        else:
+            return False
+    except Exception as e:
+        print(e)
+        print(u'Failed to configure proxy!')
+        return False

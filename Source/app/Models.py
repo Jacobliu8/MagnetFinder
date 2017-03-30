@@ -3,7 +3,7 @@
 class ProxyServer:
     __slots__ = ('proxy_address', 'proxy_http', 'speed', 'proxy_type', 'country')
 
-    def __init__(self, proxy_address, proxy_http, speed, proxy_type, country):
+    def __init__(self, proxy_address="", proxy_http="", speed="", proxy_type="", country=""):
         self.proxy_address = proxy_address
         self.proxy_http = proxy_http
         self.speed = speed
