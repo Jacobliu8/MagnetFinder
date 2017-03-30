@@ -1,5 +1,7 @@
 #!/usr/bin/python
 # coding=utf-8
+
+
 __AUTOR__ = "HansonHH"
 __DATA__ = "13/08/15"
 __VERSAO__ = "1.0.1"
@@ -22,11 +24,11 @@ import re
 import sys
 import threading
 import time
-import urllib
 import webbrowser
+from urllib.parse import quote
+from urllib.request import Request, urlopen
 
-import urllib2
-from Class import FanHao
+from app.Models import FanHao
 from bs4 import BeautifulSoup
 
 from app.Proxy import get_proxy_list
@@ -40,10 +42,10 @@ def cili_parse(fanhao, proxy_headers):
     global cili_fanhaos
     cili_fanhaos = []
     try:
-        fanhao_url = 'http://www.cili.tv/search/%s_ctime_1.html' % urllib.quote(
+        fanhao_url = 'http://www.cili.tv/search/%s_ctime_1.html' % quote(
             fanhao.decode(sys.stdin.encoding).encode('utf8'))
-        proxy_request = urllib2.Request(fanhao_url, headers=proxy_headers)
-        response = urllib2.urlopen(proxy_request, timeout=5)
+        proxy_request = Request(fanhao_url, headers=proxy_headers)
+        response = urlopen(proxy_request, timeout=5)
         fanhao_html = response.read()
     except Exception:
         return cili_fanhaos
@@ -69,9 +71,9 @@ def btdb_parse(fanhao, proxy_headers):
     global btdb_fanhaos
     btdb_fanhaos = []
     try:
-        fanhao_url = 'http://btdb.in/q/%s/' % urllib.quote(fanhao.decode(sys.stdin.encoding).encode('utf8'))
-        proxy_request = urllib2.Request(fanhao_url, headers=proxy_headers)
-        response = urllib2.urlopen(proxy_request, timeout=10)
+        fanhao_url = 'http://btdb.in/q/%s/' % quote(fanhao.decode(sys.stdin.encoding).encode('utf8'))
+        proxy_request = Request(fanhao_url, headers=proxy_headers)
+        response = urlopen(proxy_request, timeout=10)
         fanhao_html = response.read()
     except Exception:
         return btdb_fanhaos
@@ -99,10 +101,10 @@ def btbook_parse(fanhao, proxy_headers):
     global btbook_fanhaos
     btbook_fanhaos = []
     try:
-        fanhao_url = 'http://www.btbook.net/search/' + urllib.quote(
+        fanhao_url = 'http://www.btbook.net/search/' + quote(
             fanhao.decode(sys.stdin.encoding).encode('utf8')) + '.html'
-        proxy_request = urllib2.Request(fanhao_url, headers=proxy_headers)
-        response = urllib2.urlopen(proxy_request, timeout=10)
+        proxy_request = Request(fanhao_url, headers=proxy_headers)
+        response = urlopen(proxy_request, timeout=10)
         fanhao_html = response.read()
     except Exception:
         return btbook_fanhaos
@@ -128,10 +130,10 @@ def btcherry_parse(fanhao, proxy_headers):
     btcherry_fanhaos = []
 
     try:
-        fanhao_url = 'http://www.btcherry.net/search?keyword=' + urllib.quote(
+        fanhao_url = 'http://www.btcherry.net/search?keyword=' + quote(
             fanhao.decode(sys.stdin.encoding).encode('utf8'))
-        proxy_request = urllib2.Request(fanhao_url, headers=proxy_headers)
-        response = urllib2.urlopen(proxy_request, timeout=10)
+        proxy_request = Request(fanhao_url, headers=proxy_headers)
+        response = urlopen(proxy_request, timeout=10)
         fanhao_html = response.read()
     except Exception:
         return btcherry_fanhaos
@@ -161,9 +163,9 @@ def zhongziIn_parse(fanhao, proxy_headers):
     zhongziIn_fanhaos = []
 
     try:
-        fanhao_url = 'http://www.zhongzi.in/s/' + urllib.quote(fanhao.decode(sys.stdin.encoding).encode('utf8'))
-        proxy_request = urllib2.Request(fanhao_url, headers=proxy_headers)
-        response = urllib2.urlopen(proxy_request, timeout=10)
+        fanhao_url = 'http://www.zhongzi.in/s/' + quote(fanhao.decode(sys.stdin.encoding).encode('utf8'))
+        proxy_request = Request(fanhao_url, headers=proxy_headers)
+        response = urlopen(proxy_request, timeout=10)
         fanhao_html = response.read()
     except Exception:
         return zhongziIn_fanhaos
@@ -189,10 +191,10 @@ def micili_parse(fanhao, proxy_headers):
     micili_fanhaos = []
 
     try:
-        fanhao_url = 'http://www.micili.com/list/' + urllib.quote(
+        fanhao_url = 'http://www.micili.com/list/' + quote(
             fanhao.decode(sys.stdin.encoding).encode('utf8')) + '/?c=&s=create_time'
-        proxy_request = urllib2.Request(fanhao_url, headers=proxy_headers)
-        response = urllib2.urlopen(proxy_request, timeout=10)
+        proxy_request = Request(fanhao_url, headers=proxy_headers)
+        response = urlopen(proxy_request, timeout=10)
         fanhao_html = response.read()
     except Exception:
         return micili_fanhaos
@@ -220,9 +222,9 @@ def btku_parse(fanhao, proxy_headers):
     btku_fanhaos = []
 
     try:
-        fanhao_url = 'http://www.btku.me/q/%s/' % urllib.quote(fanhao.decode(sys.stdin.encoding).encode('utf8'))
-        proxy_request = urllib2.Request(fanhao_url, headers=proxy_headers)
-        response = urllib2.urlopen(proxy_request, timeout=10)
+        fanhao_url = 'http://www.btku.me/q/%s/' % quote(fanhao.decode(sys.stdin.encoding).encode('utf8'))
+        proxy_request = Request(fanhao_url, headers=proxy_headers)
+        response = urlopen(proxy_request, timeout=10)
         fanhao_html = response.read()
     except Exception:
         return btku_fanhaos
@@ -251,8 +253,8 @@ def Qululu_parse(fanhao, proxy_headers):
     try:
         fanhao_url = 'http://www.qululu.cn/search1/b/%s/1/hot_d' % fanhao.decode(sys.stdin.encoding).encode(
             'utf8').encode('hex')
-        proxy_request = urllib2.Request(fanhao_url, headers=proxy_headers)
-        response = urllib2.urlopen(proxy_request, timeout=10)
+        proxy_request = Request(fanhao_url, headers=proxy_headers)
+        response = urlopen(proxy_request, timeout=10)
         fanhao_html = response.read()
     except Exception:
         return Qululu_fanhaos
@@ -280,10 +282,10 @@ def nimasou_parse(fanhao, proxy_headers):
     nimasou_fanhaos = []
 
     try:
-        fanhao_url = 'http://www.nimasou.com/l/%s-hot-desc-1' % urllib.quote(
+        fanhao_url = 'http://www.nimasou.com/l/%s-hot-desc-1' % quote(
             fanhao.decode(sys.stdin.encoding).encode('utf8'))
-        proxy_request = urllib2.Request(fanhao_url, headers=proxy_headers)
-        response = urllib2.urlopen(proxy_request, timeout=10)
+        proxy_request = Request(fanhao_url, headers=proxy_headers)
+        response = urlopen(proxy_request, timeout=10)
         fanhao_html = response.read()
     except Exception:
         return nimasou_fanhaos
@@ -419,7 +421,7 @@ if __name__ == '__main__':
     enable_proxy = False
 
     # Do you want to configure proxy 
-    proxy_select = raw_input(unicode('是否设置代理?(Y/N):', 'utf-8').encode(type))
+    proxy_select = input('是否设置代理?(Y/N):')
     if proxy_select == 'Y' or proxy_select == 'y':
         enable_proxy = True
     else:
@@ -438,7 +440,7 @@ if __name__ == '__main__':
 
     while True:
         # Input title to search
-        fanhao = raw_input(unicode('请输入想要搜索的番号或标题:', 'utf-8').encode(type))
+        fanhao = input(unicode('请输入想要搜索的番号或标题:', 'utf-8').encode(type))
         # Counting time start point 
         start_time = time.time()
 
